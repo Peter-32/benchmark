@@ -1,5 +1,6 @@
 import pandas as pd
 from utils import *
+import matplotlib.pyplot as plt
 pro_df = local.read.csv('2_extract_pro_injects', 'interim')
 
 # We will skip very short games for benchmarking analysis 
@@ -28,3 +29,5 @@ print(pro_data_cumulative_df)
 # # Check the plots of all 3 oponent_race separately and combined first
 # terran_benchmarks
 # for game_number in pro_df.game_number.unique():
+
+plt.plot(pro_data_cumulative_df)
