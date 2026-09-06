@@ -30,4 +30,5 @@ print(pro_data_cumulative_df)
 # terran_benchmarks
 # for game_number in pro_df.game_number.unique():
 
-plt.plot(pro_data_cumulative_df)
+plt.plot(pro_data_cumulative_df.second, pro_data_cumulative_df.inject_count)
+plt.savefig('../data/interim/4_pro_plot.png', dpi=300)
