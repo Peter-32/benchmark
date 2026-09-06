@@ -9,25 +9,27 @@ game_number = 0
 for account in ['account1', 'account2', 'account3']:
     files = glob(f'../data/input/my_data/{account}/*')    
     for file in tqdm.tqdm(files):
-        game_number += 1
+        
         try:
             replay = sc2reader.load_replay(file, load_map=True)
         except Exception as e:
             print(f"Failed to load {file}: {e}")
             continue
-        
-        assert replay.map_name in ['valid_maps', "At Eternity's Edge", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
+        if replay.map_name in ['Emerald City CE']:
+            continue
+        game_number += 1
+        assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
 
         is_valid_release = replay.release_string >= '5.0.16'
         assert is_valid_release, replay.release_string
         
-        player1 = 'Serral'
+        player1 = 'nemo'
         player2 = None
         player1_won = None
         player1_race = 'Zerg'
         player2_race = None
         for player in replay.players:
-            if player.name == 'nemo':
+            if player.name == 'nemo' or player.name == 'Kairo':
                 assert player.play_race == 'Zerg'
                 player1_won = player.result
             else:
@@ -64,7 +66,7 @@ for account in ['account1', 'account2', 'account3']:
         inject_times_df['opponent_race'] = player2_race
         inject_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
         inject_times_df['main_player_won'] = player1_won
-        inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time']]
+        inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time', 'main_player_won']]
         all_dfs.append(inject_times_df)
 inject_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
 local.write.csv(inject_times_df, '2_extract_pro_injects')
