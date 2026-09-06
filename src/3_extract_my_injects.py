@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import tqdm
 from glob import glob
+from utils import *
 
 all_dfs = []
 game_number = 0
@@ -15,7 +16,7 @@ for account in ['account3', 'account1', 'account2']:
         except Exception as e:
             print(f"Failed to load {file}: {e}")
             continue
-        if replay.map_name in ['Emerald City CE', 'Reclamation LE', 'Fields of Death', 'Gemgarden LE', 'New Bed of Chaos LE', 'Rhoskallian LE', 'Rust Bucket LE', 'Sludge City', 'Undercurrent LE', 'Yellowjacket', 'Phantom Mode']:
+        if replay.map_name in ['Ruby Rock LE', 'Emerald City CE', 'Reclamation LE', 'Fields of Death', 'Gemgarden LE', 'New Bed of Chaos LE', 'Rhoskallian LE', 'Rust Bucket LE', 'Sludge City', 'Undercurrent LE', 'Yellowjacket', 'Phantom Mode']:
             continue
         game_number += 1
         assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
@@ -69,4 +70,4 @@ for account in ['account3', 'account1', 'account2']:
         inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time', 'main_player_won']]
         all_dfs.append(inject_times_df)
 inject_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
-local.write.csv(inject_times_df, '2_extract_pro_injects')
+local.write.csv(inject_times_df, '3_extract_my_injects')
