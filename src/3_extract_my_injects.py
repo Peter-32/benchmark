@@ -6,8 +6,8 @@ from glob import glob
 
 all_dfs = []
 game_number = 0
-for account in ['account2', 'account3', 'account1']:
-    files = glob(f'../data/input/my_data/{account}/*')[50:]
+for account in ['account1', 'account2', 'account3']:
+    files = glob(f'../data/input/my_data/{account}/*')
     for file in tqdm.tqdm(files):
         
         try:
