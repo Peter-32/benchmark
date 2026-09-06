@@ -7,7 +7,7 @@ from glob import glob
 all_dfs = []
 game_number = 0
 for account in ['account1', 'account2', 'account3']:
-    files = glob(f'../data/input/my_data/{account}/*')
+    files = glob(f'../data/input/my_data/{account}/*')    
     for file in tqdm.tqdm(files):
         game_number += 1
         try:
@@ -16,7 +16,7 @@ for account in ['account1', 'account2', 'account3']:
             print(f"Failed to load {file}: {e}")
             continue
         
-        assert replay.map_name in ['valid_maps', 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
+        assert replay.map_name in ['valid_maps', "At Eternity's Edge", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
 
         is_valid_release = replay.release_string >= '5.0.16'
         assert is_valid_release, replay.release_string
