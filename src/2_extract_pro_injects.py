@@ -2,10 +2,12 @@ import sc2reader
 import pandas as pd
 import numpy as np
 import tqdm
+from utils import *
 from glob import glob
 
 game_number = 0
 files = glob('../data/input/pro_data/*')
+all_dfs = []
 for file in tqdm.tqdm(files):
     game_number += 1
     try:
@@ -14,7 +16,7 @@ for file in tqdm.tqdm(files):
         print(f"Failed to load {file}: {e}")
         continue
     
-    assert replay.map_name in ['valid_maps', 'At Eternity's Edge LE', 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
+    assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
 
     is_valid_release = replay.release_string >= '5.0.16'
     assert is_valid_release, replay.release_string
@@ -61,4 +63,6 @@ for file in tqdm.tqdm(files):
     inject_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
     inject_times_df['main_player_won'] = player1_won
     inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time']]
-    inject_times_df
+    all_dfs.append(inject_times_df)
+inject_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
+local.write.csv(inject_times_df, '2_extract_pro_injects')
