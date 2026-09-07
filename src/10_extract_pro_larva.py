@@ -53,7 +53,6 @@ for file in tqdm.tqdm(files):
         except:
             pass
         
-        # print(seconds, event)
         if "changed to Egg" in str(event):
             current_larva_count = max(0, current_larva_count - 1)
         if "Unit born Larva" in str(event):
@@ -71,7 +70,5 @@ for file in tqdm.tqdm(files):
     output_df['main_player_won'] = player1_won
     output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_time', 'larva_amount']]
     all_dfs.append(output_df)
-    break
 output_df = pd.concat(all_dfs, axis='index', ignore_index=True)
 local.write.csv(output_df, '10_extract_pro_larva')
-print('done')
