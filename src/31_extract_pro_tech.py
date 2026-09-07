@@ -55,7 +55,7 @@ for file in tqdm.tqdm(files):
     
         if event.name == 'PlayerStatsEvent':
             tech_data.append(seconds)
-            tech_amounts_data.append(event.minerals_used_current_tech + event.minerals_used_in_progress_tech + event.vespene_used_current_tech + event.vespene_used_in_progress_tech)
+            tech_amounts_data.append(event.minerals_used_current_technology + event.minerals_used_in_progress_technology + event.vespene_used_current_technology + event.vespene_used_in_progress_technology)
         if seconds > 10*60:
             break
     output_df = pd.DataFrame()
