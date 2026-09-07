@@ -14,7 +14,7 @@ pro_terran_aggregated_data
 
 plt.plot(my_terran_aggregated_data)
 plt.plot(pro_terran_aggregated_data)
-score = sum(pro_terran_aggregated_data) / sum(my_terran_aggregated_data)
+score = sum(my_terran_aggregated_data) / sum(pro_terran_aggregated_data)
 plt.legend(['my cumulative supply resources', 'pro cumulative supply resources'])
 plt.title(f"supply ZvT Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_supply_zvt_benchmark.png")
@@ -30,7 +30,7 @@ pro_zerg_aggregated_data
 
 plt.plot(my_zerg_aggregated_data)
 plt.plot(pro_zerg_aggregated_data)
-score = sum(pro_zerg_aggregated_data) / sum(my_zerg_aggregated_data)
+score = sum(my_zerg_aggregated_data) / sum(pro_zerg_aggregated_data)
 plt.legend(['my cumulative supply resources', 'pro cumulative supply resources'])
 plt.title(f"supply ZvZ Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_supply_zvz_benchmark.png")
@@ -46,7 +46,7 @@ pro_protoss_aggregated_data
 
 plt.plot(my_protoss_aggregated_data)
 plt.plot(pro_protoss_aggregated_data)
-score = sum(pro_protoss_aggregated_data) / sum(my_protoss_aggregated_data)
+score = sum(my_protoss_aggregated_data) / sum(pro_protoss_aggregated_data)
 plt.legend(['my cumulative supply resources', 'pro cumulative supply resources'])
 plt.title(f"supply ZvP Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_supply_zvp_benchmark.png")
