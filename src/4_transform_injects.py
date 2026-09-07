@@ -11,13 +11,21 @@ print("shape", pro_df.shape, my_df.shape)
 dfs = []
 for game_number in pro_df.game_number.unique():
     pro_df_one_game = pro_df.query(f'game_number == {game_number}')
-    print(pro_df_one_game)
+    input_data = list(pro_df_one_game.sort_values(by='inject_time')['inject_time'].values)
+    # print(pro_df_one_game)
 
     data_i = []
     cumulative_count = []
-    for i in range(0, 601):
-        data_i.append(i)
-        cumulative_count.append(pro_df_one_game.query(f'inject_time < {i}').shape[0])
+    j = 0
+    current_cumulative = 0
+    i = 0
+    for j in range(len(input_data)):
+        while i < input_data[j]:
+            data_i.append(i)
+            cumulative_count.append(current_cumulative)
+            i += 1
+        current_cumulative += 1
+
     pro_data_cumulative_df = pd.DataFrame()
     pro_data_cumulative_df['second'] = data_i
     pro_data_cumulative_df['game_number'] = game_number
@@ -31,13 +39,21 @@ local.write.csv(pro_df, '4_pro_inject_transform')
 dfs = []
 for game_number in my_df.game_number.unique():
     my_df_one_game = my_df.query(f'game_number == {game_number}')
-    print(my_df_one_game)
+    input_data = list(pro_df_one_game.sort_values(by='inject_time')['inject_time'].values)
+    # print(my_df_one_game)
 
     data_i = []
     cumulative_count = []
-    for i in range(0, 601):
-        data_i.append(i)
-        cumulative_count.append(my_df_one_game.query(f'inject_time < {i}').shape[0])
+    j = 0
+    current_cumulative = 0
+    i = 0
+    for j in range(len(input_data)):
+        while i < input_data[j]:
+            data_i.append(i)
+            cumulative_count.append(current_cumulative)
+            i += 1
+        current_cumulative += 1
+
     my_data_cumulative_df = pd.DataFrame()
     my_data_cumulative_df['second'] = data_i
     my_data_cumulative_df['game_number'] = game_number
