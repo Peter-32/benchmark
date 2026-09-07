@@ -73,4 +73,4 @@ for account in ['sample']:
         output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'unspent_time', 'unspent_amount']]
         all_dfs.append(output_df)
 output_df = pd.concat(all_dfs, axis='index', ignore_index=True)
-local.write.csv(output_df, '6_extract_pro_unspent')
+local.write.csv(output_df, '7_extract_my_unspent')

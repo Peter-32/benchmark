@@ -11,8 +11,8 @@ print("shape", pro_df.shape, my_df.shape)
 dfs = []
 for game_number in pro_df.game_number.unique():
     pro_df_one_game = pro_df.query(f'game_number == {game_number}')
-    input_data1 = list(pro_df_one_game.sort_values(by='inject_time')['unspent_time'].values)
-    input_data2 = list(pro_df_one_game.sort_values(by='inject_time')['unspent_amount'].values)
+    input_data1 = list(pro_df_one_game.sort_values(by='unspent_time')['unspent_time'].values)
+    input_data2 = list(pro_df_one_game.sort_values(by='unspent_time')['unspent_amount'].values)
 
     data_i = []
     cumulative_total = []
@@ -22,7 +22,7 @@ for game_number in pro_df.game_number.unique():
     for j in range(len(input_data1)):
         while i < input_data1[j]:
             data_i.append(i)
-            cumulative_count.append(current_cumulative)
+            cumulative_total.append(current_cumulative)
             i += 1
         current_cumulative += input_data2[j]
 
@@ -39,8 +39,8 @@ local.write.csv(pro_df, '8_pro_unspent_transform')
 dfs = []
 for game_number in my_df.game_number.unique():
     my_df_one_game = my_df.query(f'game_number == {game_number}')
-    input_data1 = list(my_df_one_game.sort_values(by='inject_time')['unspent_time'].values)
-    input_data2 = list(my_df_one_game.sort_values(by='inject_time')['unspent_amount'].values)
+    input_data1 = list(my_df_one_game.sort_values(by='unspent_time')['unspent_time'].values)
+    input_data2 = list(my_df_one_game.sort_values(by='unspent_time')['unspent_amount'].values)
 
     data_i = []
     cumulative_total = []
@@ -50,7 +50,7 @@ for game_number in my_df.game_number.unique():
     for j in range(len(input_data1)):
         while i < input_data1[j]:
             data_i.append(i)
-            cumulative_count.append(current_cumulative)
+            cumulative_total.append(current_cumulative)
             i += 1
         current_cumulative += input_data2[j]
 
