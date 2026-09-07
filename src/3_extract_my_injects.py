@@ -56,11 +56,8 @@ for account in ['sample']:
             except:
                 pass
         
-            if event.name == 'TargetUnitCommandEvent':
-                if event.ability == None:
-                    continue
-                if event.ability.name == 'SpawnLarva':
-                    inject_times_data.append(seconds)
+            if 'SpawnLarva' in str(event.name):
+                inject_times_data.append(seconds)
             if seconds > 10*60:
                 break
         inject_times_df = pd.DataFrame()
