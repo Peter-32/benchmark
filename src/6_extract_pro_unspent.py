@@ -35,7 +35,8 @@ for file in tqdm.tqdm(files):
             player2_race = player.play_race
     print(player1, player2, player1_race, player2_race)
     
-    inject_times_data = []
+    unspent_amounts_data = []
+    unspent_data = []
     for event in replay.events:
         seconds = event.frame / 22.4
         minutes = int(seconds // 60)
@@ -52,20 +53,19 @@ for file in tqdm.tqdm(files):
             pass
         
     
-        if event.name == 'TargetUnitCommandEvent':
-            if event.ability == None:
-                continue
-            if event.ability.name == 'SpawnLarva':
-                inject_times_data.append(seconds)
+        if event.name == 'PlayerStatsEvent':
+            unspent_data.append(seconds)
+            unspent_amounts_data.append(event.minerals_current + event.vespene_current)
         if seconds > 10*60:
             break
-    inject_times_df = pd.DataFrame()
-    inject_times_df['inject_time'] = inject_times_data
-    inject_times_df['game_number'] = game_number
-    inject_times_df['opponent_race'] = player2_race
-    inject_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
-    inject_times_df['main_player_won'] = player1_won
-    inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time']]
-    all_dfs.append(inject_times_df)
-inject_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
-local.write.csv(inject_times_df, '2_extract_pro_injects')
+    output_df = pd.DataFrame()
+    output_df['unspent_time'] = unspent_data
+    output_df['unspent_amount'] = unspent_amounts_data
+    output_df['game_number'] = game_number
+    output_df['opponent_race'] = player2_race
+    output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+    output_df['main_player_won'] = player1_won
+    output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'unspent_time', 'unspent_amount']]
+    all_dfs.append(output_df)
+output_df = pd.concat(all_dfs, axis='index', ignore_index=True)
+local.write.csv(output_df, '6_extract_pro_unspent')
