@@ -40,7 +40,7 @@ for account in ['sample']:
                 player2_race = player.play_race
         print(player1, player2, player1_race, player2_race)
 
-        inject_times_data = []
+        larva_born_times_data = []
         for event in replay.events:
             seconds = event.frame / 22.4
             minutes = int(seconds // 60)
@@ -55,23 +55,17 @@ for account in ['sample']:
                     continue
             except:
                 pass
-        
-            if 'SpawnLarva' in str(event):
-                inject_times_data.append(seconds)
-            elif event.name == 'TargetUnitCommandEvent':
-                if event.ability == None:
-                    continue
-                if event.ability.name == 'SpawnLarva':
-                    inject_times_data.append(seconds)
+            if event.name == "UnitBornEvent" and event.unit_type_name == "Larva":
+                larva_born_times_data.append(seconds)
             if seconds > 10*60:
                 break
-        inject_times_df = pd.DataFrame()
-        inject_times_df['inject_time'] = inject_times_data
-        inject_times_df['game_number'] = game_number
-        inject_times_df['opponent_race'] = player2_race
-        inject_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
-        inject_times_df['main_player_won'] = player1_won
-        inject_times_df = inject_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'inject_time', 'main_player_won']]
-        all_dfs.append(inject_times_df)
-inject_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
-local.write.csv(inject_times_df, '3_extract_my_injects')
+        larva_born_times_df = pd.DataFrame()
+        larva_born_times_df['larva_born_time'] = larva_born_times_data
+        larva_born_times_df['game_number'] = game_number
+        larva_born_times_df['opponent_race'] = player2_race
+        larva_born_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        larva_born_times_df['main_player_won'] = player1_won
+        larva_born_times_df = larva_born_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']]
+        all_dfs.append(larva_born_times_df)
+larva_born_times_df = pd.concat(all_dfs, axis='index', ignore_index=True)
+local.write.csv(larva_born_times_df, '3_extract_my_larva_borns')
