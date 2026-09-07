@@ -43,11 +43,14 @@ for file in tqdm.tqdm(files):
         if seconds < 1:
             continue
     
-        try:
-            if playername != 'Serral':
+        try: 
+            if player2 in str(event):
+                continue           
+            if event.player == player2:
                 continue
         except:
             pass
+        
     
         if event.name == 'TargetUnitCommandEvent':
             if event.ability == None:

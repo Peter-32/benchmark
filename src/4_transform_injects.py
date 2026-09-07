@@ -6,6 +6,7 @@ pro_df = local.read.csv('2_extract_pro_injects', 'interim')
 pro_df = pro_df.query("game_length_seconds_max_600 >= 420")
 my_df = local.read.csv('3_extract_my_injects', 'interim')
 my_df = my_df.query("game_length_seconds_max_600 >= 420")
+print("shape", pro_df.shape, my_df.shape)
 
 dfs = []
 for game_number in pro_df.game_number.unique():

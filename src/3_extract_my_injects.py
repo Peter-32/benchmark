@@ -7,7 +7,7 @@ from utils import *
 
 all_dfs = []
 game_number = 0
-for account in ['account3', 'account1', 'account2']:
+for account in ['sample']:
     files = glob(f'../data/input/my_data/{account}/*')
     for file in tqdm.tqdm(files):
         
@@ -49,7 +49,9 @@ for account in ['account3', 'account1', 'account2']:
                 continue
         
             try:
-                if playername != 'Serral':
+                if player2 in str(event):
+                    continue
+                if event.player == player2:
                     continue
             except:
                 pass
