@@ -16,37 +16,28 @@
 
         h1 {
             color: #333;
-            margin-bottom: 20px;
         }
 
         .gallery {
-            display: grid;
-            /* Creates exactly 3 columns of equal size */
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px;
-            max-width: 1000px;
-            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            max-width: 1200px;
         }
 
         .gallery img {
-            width: 100%;
+            max-width: 100%;
             height: auto;
-            object-fit: cover;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Adjusts to 1 column on small screens (like mobile phones) */
-        @media (max-width: 600px) {
-            .gallery {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
 
-    <h1>Benchmarks</h1>
+    <h1>My Images</h1>
+
     <div class="gallery">
         <img src="../data/output/my_inject_zvt_benchmark.png" alt="Image 1">
         <img src="../data/output/my_inject_zvz_benchmark.png" alt="Image 2">
@@ -54,10 +45,10 @@
         <img src="../data/output/my_unspent_zvt_benchmark.png" alt="Image 4">
         <img src="../data/output/my_unspent_zvz_benchmark.png" alt="Image 5">
         <img src="../data/output/my_unspent_zvp_benchmark.png" alt="Image 6">
-        <img src="../data/output/my_unspent_zvt_benchmark.png" alt="Image 7">
-        <img src="../data/output/my_unspent_zvz_benchmark.png" alt="Image 8">
-        <img src="../data/output/my_unspent_zvp_benchmark.png" alt="Image 9">
-
+        <!-- <img src="7.png" alt="Image 7">
+        <img src="8.png" alt="Image 8">
+        <img src="9.png" alt="Image 9">
+        <img src="10.png" alt="Image 10"> -->
     </div>
 
 </body>
