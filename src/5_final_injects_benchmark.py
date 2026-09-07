@@ -14,8 +14,10 @@ pro_terran_aggregated_data
 
 plt.plot(my_terran_aggregated_data)
 plt.plot(pro_terran_aggregated_data)
+score = sum(my_terran_aggregated_data) / sum(pro_terran_aggregated_data)
+print(score)
 plt.legend(['my injects', 'pro injects'])
-plt.title("Inject ZvT Benchmark")
+plt.title(f"Inject ZvT Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_inject_zvt_benchmark.png")
 plt.clf()
 
@@ -29,8 +31,10 @@ pro_zerg_aggregated_data
 
 plt.plot(my_zerg_aggregated_data)
 plt.plot(pro_zerg_aggregated_data)
+score = sum(my_zerg_aggregated_data) / sum(pro_zerg_aggregated_data)
+
 plt.legend(['my injects', 'pro injects'])
-plt.title("Inject ZvZ Benchmark")
+plt.title(f"Inject ZvZ Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_inject_zvz_benchmark.png")
 plt.clf()
 
@@ -44,7 +48,9 @@ pro_protoss_aggregated_data
 
 plt.plot(my_protoss_aggregated_data)
 plt.plot(pro_protoss_aggregated_data)
+score = sum(my_protoss_aggregated_data) / sum(pro_protoss_aggregated_data)
+
 plt.legend(['my injects', 'pro injects'])
-plt.title("Inject ZvP Benchmark")
+plt.title(f"Inject ZvP Benchmark - Score {score:.0%}")
 plt.savefig("../data/output/my_inject_zvp_benchmark.png")
 plt.clf()

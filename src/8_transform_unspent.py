@@ -62,7 +62,3 @@ for game_number in my_df.game_number.unique():
     dfs.append(my_data_cumulative_df)
 my_df = pd.concat(dfs, axis='index', ignore_index=True)
 local.write.csv(my_df, '8_my_unspent_transform')
-
-
-# plt.plot(pro_data_cumulative_df.second, pro_data_cumulative_df.inject_count)
-# plt.savefig('../data/interim/4_pro_plot.png', dpi=300)

@@ -12,7 +12,6 @@ dfs = []
 for game_number in pro_df.game_number.unique():
     pro_df_one_game = pro_df.query(f'game_number == {game_number}')
     input_data = list(pro_df_one_game.sort_values(by='inject_time')['inject_time'].values)
-    # print(pro_df_one_game)
 
     data_i = []
     cumulative_count = []
@@ -32,15 +31,14 @@ for game_number in pro_df.game_number.unique():
     pro_data_cumulative_df['inject_count'] = cumulative_count
     pro_data_cumulative_df['opponent_race'] = pro_df_one_game.iloc[0]['opponent_race']
     dfs.append(pro_data_cumulative_df)
-pro_df = pd.concat(dfs, axis='index', ignore_index=True)
-local.write.csv(pro_df, '4_pro_inject_transform')
+pro_df_output = pd.concat(dfs, axis='index', ignore_index=True)
+local.write.csv(pro_df_output, '4_pro_inject_transform')
 
 
 dfs = []
 for game_number in my_df.game_number.unique():
     my_df_one_game = my_df.query(f'game_number == {game_number}')
-    input_data = list(pro_df_one_game.sort_values(by='inject_time')['inject_time'].values)
-    # print(my_df_one_game)
+    input_data = list(my_df_one_game.sort_values(by='inject_time')['inject_time'].values)
 
     data_i = []
     cumulative_count = []
@@ -60,9 +58,5 @@ for game_number in my_df.game_number.unique():
     my_data_cumulative_df['inject_count'] = cumulative_count
     my_data_cumulative_df['opponent_race'] = my_df_one_game.iloc[0]['opponent_race']
     dfs.append(my_data_cumulative_df)
-my_df = pd.concat(dfs, axis='index', ignore_index=True)
-local.write.csv(my_df, '4_my_inject_transform')
-
-
-# plt.plot(pro_data_cumulative_df.second, pro_data_cumulative_df.inject_count)
-# plt.savefig('../data/interim/4_pro_plot.png', dpi=300)
+my_df_output = pd.concat(dfs, axis='index', ignore_index=True)
+local.write.csv(my_df_output, '4_my_inject_transform')
