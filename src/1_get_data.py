@@ -77,7 +77,9 @@ if len(files_chosen) < 3:
 folder_path = '../data/input/my_data/sample'
 try:
     shutil.rmtree(folder_path)
-    print(folder_path)
+except:
+    pass
+try:
     os.mkdir(folder_path)
 except:
     pass
