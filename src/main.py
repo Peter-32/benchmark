@@ -28,12 +28,13 @@ def save_params(val1, val2):
 def my_main_function(replay_path, player_name):
     all_files = glob("*.py")
     files_of_interest = [y for (x, y) in sorted([(str(x.split("_")[0]).zfill(2), x) for x in all_files]) if 'get_data' not in y and 'pro' not in y and y not in ['main.py', 'utils.py']]
+    result_label.config(text=f"Running benchmarking now.")
     subprocess.run([sys.executable, '1_get_data.py', replay_path, player_name], check=True)
     for script_name in tqdm.tqdm(files_of_interest):
         print(script_name)
         subprocess.run([sys.executable, script_name], check=True)
     html_file = Path(__file__).parent / "output_html.html"
-    webbrowser.open(html_file.to_uri())
+    webbrowser.open(html_file.as_uri())
     return "Success"
 
 def on_button_click():
