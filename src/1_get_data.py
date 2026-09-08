@@ -74,7 +74,8 @@ for file in tqdm.tqdm(files):
 print("replays found", len(files_chosen))
 if len(files_chosen) < 3:
     raise Exception("Could not found one replay per matchup with 7+ minutes")
-folder_path = '../data/input/my_data/sample'
+base_project_folder = get_base_project_folder()
+folder_path = f'{base_project_folder}/data/input/my_data/sample'
 try:
     shutil.rmtree(folder_path)
 except:

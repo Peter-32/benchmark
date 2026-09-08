@@ -6,7 +6,8 @@ from utils import *
 from glob import glob
 
 game_number = 0
-files = glob('../data/input/pro_data/*')
+base_project_folder = get_base_project_folder()
+files = glob(f'{base_project_folder}/data/input/pro_data/*')
 all_dfs = []
 for file in tqdm.tqdm(files):
     game_number += 1

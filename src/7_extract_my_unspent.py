@@ -8,7 +8,8 @@ from utils import *
 all_dfs = []
 game_number = 0
 for account in ['sample']:
-    files = glob(f'../data/input/my_data/{account}/*')
+    base_project_folder = get_base_project_folder()
+    files = glob(f'{base_project_folder}/data/input/my_data/{account}/*')
     for file in tqdm.tqdm(files):
         
         try:

@@ -1,5 +1,5 @@
 import pandas as pd; from datetime import datetime
-import re; import json; import pickle
+import re; import json; import pickle; import sys
 import os; import shutil; from pathlib import Path; 
 import urllib.parse; import configparser; from functools import lru_cache 
 config = configparser.ConfigParser()
@@ -31,11 +31,22 @@ class local:
     def _get_full_path(file_name: str, file_type: str):
         """This helper function finds the path to your data folder and file_type subfolder (creates the subfolder if needed).
         Places the data folder outside the src/adhoc/notebooks directory of this script/notebook if found otherwise in the same directory."""        
-        script_dir = os.path.abspath(os.getcwd())
-        base_project_folder = re.split('[/\\\\]+(?:src|adhoc|notebooks)(?:[/\\\\]|$)', script_dir)[0]
+        if hasattr(sys, '_MEIPASS'):
+            base_project_folder = Path(sys._MEIPASS)
+        else:
+            script_dir = os.path.abspath(os.getcwd())        
+            base_project_folder = re.split('[/\\\\]+(?:src|adhoc|notebooks)(?:[/\\\\]|$)', script_dir)[0]
         if file_type == 'output':
             file_name = datetime.now().strftime("%Y%m%d_%H%M") + file_name          
         building_path = os.path.join(base_project_folder, "data", file_type)
         Path(building_path).mkdir(parents=True, exist_ok=True)
         full_path = os.path.join(building_path, file_name)
         return full_path
+
+def get_base_project_folder():
+    if hasattr(sys, '_MEIPASS'):
+        base_project_folder = Path(sys._MEIPASS)
+    else:
+        script_dir = os.path.abspath(os.getcwd())        
+        base_project_folder = re.split('[/\\\\]+(?:src|adhoc|notebooks)(?:[/\\\\]|$)', script_dir)[0]
+    return base_project_folder

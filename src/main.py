@@ -76,7 +76,7 @@ entry2.insert(0, saved_data.get("param2", ""))
 action_btn = ttk.Button(root, text="Compute Benchmarks", command=on_button_click)
 action_btn.grid(row=2, column=0, columnspan=2, pady=15)
 
-result_label = tk.Label(root, text="Result: Give it 30 seconds", fg="gray")
+result_label = tk.Label(root, text="Result: Give it 30 seconds after clicking the button", fg="gray")
 result_label.grid(row=3, column=0, columnspan=2, pady=5)
 
 root.mainloop()
