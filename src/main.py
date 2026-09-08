@@ -28,15 +28,19 @@ def save_params(val1, val2):
 def my_main_function(replay_path, player_name):
     all_files = glob("*.py")
     files_of_interest = [y for (x, y) in sorted([(str(x.split("_")[0]).zfill(2), x) for x in all_files]) if 'get_data' not in y and 'pro' not in y and y not in ['main.py', 'utils.py']]
-    subprocess.run([sys.executable, '1_get_data.py', replay_path, player_name], check=True)
+    result = subprocess.run([sys.executable, '1_get_data.py', replay_path, player_name], check=True, capture_output=True, text=True)
+    print("STDOUT:", result.stdout)
+    print("STDERR:", result.stderr)
     for script_name in tqdm.tqdm(files_of_interest):
         print(script_name)
         subprocess.run([sys.executable, script_name], check=True)
+        print("STDOUT:", result.stdout)
+        print("STDERR:", result.stderr)
     html_file = Path(__file__).parent / "output_html.html"
     webbrowser.open(html_file.as_uri())
     return "Success"
 
-def on_button_click():
+def on_button_click(entry1, entry2):
     val1 = entry1.get()
     val2 = entry2.get()
     
@@ -52,31 +56,37 @@ def on_button_click():
     
     try:
         result = my_main_function(val1, val2)
-        result_label.config(text=f"Result: {result}")
+        # result_label.config(text=f"Result: {result}")
     except Exception as e:
         messagebox.showerror("Execution Error", f"An error occurred: {e}")
 
-root = tk.Tk()
-root.title("Python Function Runner")
-root.geometry("350x220")
-root.resizable(False, False)
+def start_gui():
+    root = tk.Tk()
+    root.title("Python Function Runner")
+    root.geometry("350x220")
+    root.resizable(False, False)
 
-saved_data = load_saved_params()
+    saved_data = load_saved_params()
 
-tk.Label(root, text="Path to Replays:").grid(row=0, column=0, padx=10, pady=10, sticky="e")
-entry1 = ttk.Entry(root, width=25)
-entry1.grid(row=0, column=1, padx=10, pady=10)
-entry1.insert(0, saved_data.get("param1", ""))
+    tk.Label(root, text="Path to Replays:").grid(row=0, column=0, padx=10, pady=10, sticky="e")
+    entry1 = ttk.Entry(root, width=25)
+    entry1.grid(row=0, column=1, padx=10, pady=10)
+    entry1.insert(0, saved_data.get("param1", ""))
 
-tk.Label(root, text="Your Player Name:").grid(row=1, column=0, padx=10, pady=10, sticky="e")
-entry2 = ttk.Entry(root, width=25)
-entry2.grid(row=1, column=1, padx=10, pady=10)
-entry2.insert(0, saved_data.get("param2", ""))
+    tk.Label(root, text="Your Player Name:").grid(row=1, column=0, padx=10, pady=10, sticky="e")
+    entry2 = ttk.Entry(root, width=25)
+    entry2.grid(row=1, column=1, padx=10, pady=10)
+    entry2.insert(0, saved_data.get("param2", ""))
 
-action_btn = ttk.Button(root, text="Compute Benchmarks", command=on_button_click)
-action_btn.grid(row=2, column=0, columnspan=2, pady=15)
+    action_btn = ttk.Button(root, text="Compute Benchmarks", command=lambda: on_button_click(entry1, entry2))
+    action_btn.grid(row=2, column=0, columnspan=2, pady=15)
 
-result_label = tk.Label(root, text="Result: Give it 30 seconds after clicking the button", fg="gray")
-result_label.grid(row=3, column=0, columnspan=2, pady=5)
+    result_label = tk.Label(root, text="Result: Give it 30 seconds after clicking the button", fg="gray")
+    result_label.grid(row=3, column=0, columnspan=2, pady=5)
 
-root.mainloop()
+    root.mainloop()
+
+if __name__ == '__main__':
+    import multiprocessing 
+    multiprocessing.freeze_support()
+    start_gui()
