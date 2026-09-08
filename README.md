@@ -14,3 +14,9 @@ Only about 25 replays so manually downloading them.
 
 
 python -m PyInstaller --noconfirm --onedir --windowed main.py
+
+python -m PyInstaller --noconfirm --onedir --windowed --add-data "../data;data" --name="MyBenchmarkApp" main.py
+
+python -m PyInstaller --noconfirm --onedir --add-data "../data;data" --name="MyBenchmarkApp" main.py
+
+C:\Users\peter\OneDrive\code\benchmark\data\input\my_data\sample_2
