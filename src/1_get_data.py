@@ -71,5 +71,13 @@ for file in tqdm.tqdm(files):
             files_chosen.append(file)
     if len(files_chosen) >= 3:
         break
+if len(files_chosen) < 3:
+    raise Exception("Could not found one replay per matchup with 7+ minutes")
+folder_path = '../data/input/my_data/sample'
+try:
+    shutil.rmtree(folder_path)
+    os.mkdir(folder_path)
+except:
+    pass
 for file in files_chosen:
-    shutil.copy(file, '../data/input/my_data/sample')
+    shutil.copy(file, folder_path)
