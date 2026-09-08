@@ -6,6 +6,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import os
 import json
+from pathlib import Path
+import webbrowser
 
 def load_saved_params():
     if os.path.exists('config.json'):
@@ -30,6 +32,9 @@ def my_main_function(replay_path, player_name):
     for script_name in tqdm.tqdm(files_of_interest):
         print(script_name)
         subprocess.run([sys.executable, script_name], check=True)
+    html_file = Path(__file__).parent / "output_html.html"
+    webbrowser.open(html_file.to_uri())
+    return "Success"
 
 def on_button_click():
     val1 = entry1.get()

@@ -80,8 +80,9 @@ try:
 except:
     pass
 try:
-    os.mkdir(folder_path)
+    os.mkdir(folder_path + "/")
 except:
     pass
+# print(folder_path)
 for file in files_chosen:
     shutil.copy(file, folder_path)
