@@ -1,6 +1,7 @@
 from utils import *
 import pandas as pd
 import matplotlib.pyplot as plt
+base_project_folder = get_base_project_folder()
 
 my_df = local.read.csv("17_my_creep_transform", 'interim')
 my_terran_df = my_df.query('opponent_race == "Terran"')
@@ -17,7 +18,7 @@ plt.plot(pro_terran_aggregated_data)
 score = sum(my_terran_aggregated_data) / sum(pro_terran_aggregated_data)
 plt.legend(['my creep', 'pro creep'])
 plt.title(f"creep ZvT Benchmark - Score {score:.0%}")
-plt.savefig("../data/output/my_creep_zvt_benchmark.png")
+plt.savefig(f"png_my_creep_zvt_benchmark.png")
 plt.clf()
 
 my_zerg_df = my_df.query('opponent_race == "Zerg"')
@@ -34,7 +35,7 @@ score = sum(my_zerg_aggregated_data) / sum(pro_zerg_aggregated_data)
 
 plt.legend(['my creep', 'pro creep'])
 plt.title(f"creep ZvZ Benchmark - Score {score:.0%}")
-plt.savefig("../data/output/my_creep_zvz_benchmark.png")
+plt.savefig(f"png_my_creep_zvz_benchmark.png")
 plt.clf()
 
 my_protoss_df = my_df.query('opponent_race == "Protoss"')
@@ -51,5 +52,5 @@ score = sum(my_protoss_aggregated_data) / sum(pro_protoss_aggregated_data)
 
 plt.legend(['my creep', 'pro creep'])
 plt.title(f"creep ZvP Benchmark - Score {score:.0%}")
-plt.savefig("../data/output/my_creep_zvp_benchmark.png")
+plt.savefig(f"png_my_creep_zvp_benchmark.png")
 plt.clf()
