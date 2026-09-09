@@ -406,6 +406,24 @@ def main():
         larva_df = my_data_cumulative_df.copy()
 
         # Creep Metrics
+        input_data = list(creep_df.sort_values(by='creep_time')['creep_time'].values)
+        data_i = []
+        cumulative_count = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data)):
+            while i < input_data[j]:
+                data_i.append(i)
+                cumulative_count.append(current_cumulative)
+                i += 1
+            current_cumulative += 1
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['creep_count'] = cumulative_count
+        my_data_cumulative_df['opponent_race'] = creep_df.iloc[0]['opponent_race']
+        creep_df = my_data_cumulative_df.copy()
 
         # Supply Metrics
 
