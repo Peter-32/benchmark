@@ -78,11 +78,14 @@ def main():
             raise Exception("Must be 8 worker start")
 
         # Player checks
+        player1_won = None
         player2 = None
         player2_race = None
         for player in replay.players:
             if player.name == player1:
                 assert player.play_race == 'Zerg'
+                player1_won = player.result
+
             else:
                 if player2 != None:
                     raise Exception(player.name, player2)
@@ -113,7 +116,7 @@ def main():
         larva_born_times_df['opponent_race'] = player2_race
         larva_born_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
         larva_born_times_df['main_player_won'] = player1_won
-        larva_born_times_df = larva_born_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']]
+        larva_born_times_df = larva_born_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']].copy()
 
         # Unspent Metrics
         unspent_amounts_data = []
@@ -143,7 +146,7 @@ def main():
         output_df['opponent_race'] = player2_race
         output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
         output_df['main_player_won'] = player1_won
-        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'unspent_time', 'unspent_amount']]
+        unspent_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'unspent_time', 'unspent_amount']].copy()
 
         # Larva Metrics
         larva_amounts_data = []
@@ -151,8 +154,6 @@ def main():
         current_larva_count = 0
         for event in replay.tracker_events:
             seconds = event.frame / 22.4
-            minutes = int(seconds // 60)
-            remaining_seconds = int(seconds % 60)
             if seconds < 1:
                 continue
         
@@ -164,7 +165,6 @@ def main():
             except:
                 pass
             
-        
             if "changed to Egg" in str(event):
                 current_larva_count = max(0, current_larva_count - 1)
             if "Unit born Larva" in str(event):
@@ -180,12 +180,98 @@ def main():
         output_df['opponent_race'] = player2_race
         output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
         output_df['main_player_won'] = player1_won
-        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_time', 'larva_amount']]
+        larva_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_time', 'larva_amount']].copy()
 
+        # Creep Metrics
+        creep_times_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            if seconds < 1:
+                continue
+        
+            try:
+                if player2 in str(event):
+                    continue
+                if event.player == player2:
+                    continue
+            except:
+                pass
+        
+            if 'Unit initiated CreepTumorBurrowed' in str(event) or 'BuildCreepTumor' in str(event):
+                creep_times_data.append(seconds)
+            if seconds > 10*60:
+                break
+        creep_times_df = pd.DataFrame()
+        creep_times_df['creep_time'] = creep_times_data
+        creep_times_df['game_number'] = game_number
+        creep_times_df['opponent_race'] = player2_race
+        creep_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        creep_times_df['main_player_won'] = player1_won
+        creep_times_df = creep_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'creep_time', 'main_player_won']].copy()
 
+        # Supply Metrics
+        supply_amounts_data = []
+        supply_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+        
+            if event.name == 'PlayerStatsEvent':
+                supply_data.append(seconds)
+                supply_amounts_data.append(event.food_made - event.food_used)
+            if seconds > 10*60:
+                break
+        output_df = pd.DataFrame()
+        output_df['supply_time'] = supply_data
+        output_df['supply_amount'] = supply_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        supply_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'supply_time', 'supply_amount']].copy()
 
-
-
+        # Economy Metrics
+        economy_amounts_data = []
+        economy_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            minutes = int(seconds // 60)
+            remaining_seconds = int(seconds % 60)
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+        
+            if event.name == 'PlayerStatsEvent':
+                economy_data.append(seconds)
+                economy_amounts_data.append(event.minerals_used_current_economy + event.minerals_used_in_progress_economy + event.vespene_used_current_economy + event.vespene_used_in_progress_economy)
+            if seconds > 10*60:
+                break
+        output_df = pd.DataFrame()
+        output_df['economy_time'] = economy_data
+        output_df['economy_amount'] = economy_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'economy_time', 'economy_amount']]
 
 
 
