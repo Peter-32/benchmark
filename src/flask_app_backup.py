@@ -203,13 +203,13 @@ def main():
                 creep_times_data.append(seconds)
             if seconds > 10*60:
                 break
-        creep_times_df = pd.DataFrame()
-        creep_times_df['creep_time'] = creep_times_data
-        creep_times_df['game_number'] = game_number
-        creep_times_df['opponent_race'] = player2_race
-        creep_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
-        creep_times_df['main_player_won'] = player1_won
-        creep_times_df = creep_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'creep_time', 'main_player_won']].copy()
+        creep_df = pd.DataFrame()
+        creep_df['creep_time'] = creep_times_data
+        creep_df['game_number'] = game_number
+        creep_df['opponent_race'] = player2_race
+        creep_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        creep_df['main_player_won'] = player1_won
+        creep_df = creep_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'creep_time', 'main_player_won']].copy()
 
         # Supply Metrics
         supply_amounts_data = []
