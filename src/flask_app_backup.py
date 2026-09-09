@@ -271,7 +271,73 @@ def main():
         output_df['opponent_race'] = player2_race
         output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
         output_df['main_player_won'] = player1_won
-        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'economy_time', 'economy_amount']]
+        economy_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'economy_time', 'economy_amount']].copy()
+
+        # Army Metrics
+        army_amounts_data = []
+        army_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            minutes = int(seconds // 60)
+            remaining_seconds = int(seconds % 60)
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+        
+            if event.name == 'PlayerStatsEvent':
+                army_data.append(seconds)
+                army_amounts_data.append(event.minerals_used_current_army + event.minerals_used_in_progress_army + event.vespene_used_current_army + event.vespene_used_in_progress_army)
+            if seconds > 10*60:
+                break
+        output_df = pd.DataFrame()
+        output_df['army_time'] = army_data
+        output_df['army_amount'] = army_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        army_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'army_time', 'army_amount']].copy()
+
+        # Tech Metrics
+        tech_amounts_data = []
+        tech_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            minutes = int(seconds // 60)
+            remaining_seconds = int(seconds % 60)
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+        
+            if event.name == 'PlayerStatsEvent':
+                tech_data.append(seconds)
+                tech_amounts_data.append(event.minerals_used_current_technology + event.minerals_used_in_progress_technology + event.vespene_used_current_technology + event.vespene_used_in_progress_technology)
+            if seconds > 10*60:
+                break
+        output_df = pd.DataFrame()
+        output_df['tech_time'] = tech_data
+        output_df['tech_amount'] = tech_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        tech_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'tech_time', 'tech_amount']].copy()
 
 
 
