@@ -91,6 +91,8 @@ def main():
                     raise Exception(player.name, player2)
                 player2 = player.name
                 player2_race = player.play_race
+        if player2_race == None:
+            raise Exception("Could not identify opponent's race")
 
         # Larva Born Metrics
         larva_born_times_data = []
@@ -513,19 +515,22 @@ def main():
         # Making the Plots
         #####################
 
-        # If Terran
+        my_metrics = larva_born_df.groupby('second')['larva_born_count'].quantile(0.50)[:-50]
         if player2_race == 'Terran':
-            my_metrics = larva_born_df.groupby('second')['larva_born_count'].quantile(0.50)[:-50]
             pro_metrics = larva_born_pro_terran[:-50]
-            plt.plot(my_metrics)
-            plt.plot(pro_metrics)
-            score = sum(my_metrics) / sum(pro_metrics)
-            plt.legend(['my larva_borns', 'pro larva_borns'])
-            plt.title(f"larva_born ZvT Benchmark - Score {score:.0%}")
-            buffer = io.BytesIO()
-            plt.savefig(buffer, format='png', bbox_inches='tight')
-            buffer.seek(0)
-            plt.clf()
+        elif player2_race == 'Zerg':
+            pro_metrics = larva_born_pro_zerg[:-50]
+        else:
+            pro_metrics = larva_born_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my larva_borns', 'pro larva_borns'])
+        plt.title(f"larva_born ZvT Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
 
             # Encode buffer bytes to a base64 string
             plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
