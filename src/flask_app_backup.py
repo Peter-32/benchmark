@@ -110,13 +110,13 @@ def main():
                 larva_born_times_data.append(seconds)
             if seconds > 10*60:
                 break
-        larva_born_times_df = pd.DataFrame()
-        larva_born_times_df['larva_born_time'] = larva_born_times_data
-        larva_born_times_df['game_number'] = game_number
-        larva_born_times_df['opponent_race'] = player2_race
-        larva_born_times_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
-        larva_born_times_df['main_player_won'] = player1_won
-        larva_born_times_df = larva_born_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']].copy()
+        larva_born_df = pd.DataFrame()
+        larva_born_df['larva_born_time'] = larva_born_times_data
+        larva_born_df['game_number'] = game_number
+        larva_born_df['opponent_race'] = player2_race
+        larva_born_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        larva_born_df['main_player_won'] = player1_won
+        larva_born_df = larva_born_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']].copy()
 
         # Unspent Metrics
         unspent_amounts_data = []
@@ -344,7 +344,7 @@ def main():
         ######################
 
         # Larva Born Metrics
-        input_data = list(larva_born_times_df.sort_values(by='larva_born_time')['larva_born_time'].values)
+        input_data = list(larva_born_df.sort_values(by='larva_born_time')['larva_born_time'].values)
         data_i = []
         cumulative_count = []
         j = 0
@@ -360,8 +360,8 @@ def main():
         my_data_cumulative_df['second'] = data_i
         my_data_cumulative_df['game_number'] = game_number
         my_data_cumulative_df['larva_born_count'] = cumulative_count
-        my_data_cumulative_df['opponent_race'] = larva_born_times_df.iloc[0]['opponent_race']
-        larva_born_times_df = my_data_cumulative_df.copy()
+        my_data_cumulative_df['opponent_race'] = larva_born_df.iloc[0]['opponent_race']
+        larva_born_df = my_data_cumulative_df.copy()
 
         # Unspent Metrics
         input_data1 = list(unspent_df.sort_values(by='unspent_time')['unspent_time'].values)
@@ -381,7 +381,7 @@ def main():
         my_data_cumulative_df['second'] = data_i
         my_data_cumulative_df['game_number'] = game_number
         my_data_cumulative_df['unspent_amount'] = cumulative_total
-        my_data_cumulative_df['opponent_race'] = larva_born_times_df.iloc[0]['opponent_race']
+        my_data_cumulative_df['opponent_race'] = larva_born_df.iloc[0]['opponent_race']
         unspent_df = my_data_cumulative_df.copy()
 
         # Larva Metrics
@@ -508,6 +508,22 @@ def main():
         my_data_cumulative_df['tech_amount'] = cumulative_total
         my_data_cumulative_df['opponent_race'] = tech_df.iloc[0]['opponent_race']
         tech_df = my_data_cumulative_df.copy()
+
+        #####################
+        # Making the Plots
+        #####################
+
+        # If Terran
+        if player2_race == 'Terran':
+            my_metrics = larva_born_df.groupby('second')['larva_born_count'].quantile(0.50)[:-50]
+            pro_metrics = larva_born_pro_terran[:-50]
+            plt.plot(my_metrics)
+            plt.plot(pro_metrics)
+            score = sum(my_terran_aggregated_data) / sum(pro_terran_aggregated_data)
+            plt.legend(['my larva_borns', 'pro larva_borns'])
+            plt.title(f"larva_born ZvT Benchmark - Score {score:.0%}")
+            plt.savefig(f"png_my_larva_born_zvt_benchmark.png")
+            plt.clf()
 
         imgs=[]
         return render_template("result.html", imgs=imgs)
