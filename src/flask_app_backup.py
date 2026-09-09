@@ -4,9 +4,7 @@ from werkzeug.utils import secure_filename
 import sc2reader
 import pandas as pd
 import numpy as np
-import tqdm
 from glob import glob
-from utils import *
 import matplotlib.pyplot as plt
 import base64
 import io
@@ -24,6 +22,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    if request.method == "GET":
+        return render_template("upload.html")
     if request.method == 'POST':
         file = request.files['user_file']
         player1 = request.form.get('user_name')
@@ -65,12 +65,12 @@ def main():
 
         # Map load and checks
         try:
-            replay = sc2reader.load_replay(file, load_map=True)
+            replay = sc2reader.load_replay(save_path, load_map=False)
         except Exception as e:
             raise Exception("Invalid Map")
         if replay.map_name in ['Ruby Rock LE', 'Emerald City CE', 'Reclamation LE', 'Fields of Death', 'Gemgarden LE', 'New Bed of Chaos LE', 'Rhoskallian LE', 'Rust Bucket LE', 'Sludge City', 'Undercurrent LE', 'Yellowjacket', 'Phantom Mode']:
             raise Exception("Invalid Map")
-        game_number += 1
+        game_number = 1
         if replay.map_name not in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE']:
             raise Exception("Invalid Map")
         is_valid_release = replay.release_string >= '5.0.16'
@@ -526,8 +526,8 @@ def main():
         plt.plot(my_metrics)
         plt.plot(pro_metrics)
         score = sum(my_metrics) / sum(pro_metrics)
-        plt.legend(['my larva_borns', 'pro larva_borns'])
-        plt.title(f"larva_born ZvT Benchmark - Score {score:.0%}")
+        plt.legend(['my larva born', 'pro larva born'])
+        plt.title(f"Larva Born Benchmark - Score {score:.0%}")
         buffer = io.BytesIO()
         plt.savefig(buffer, format='png', bbox_inches='tight')
         buffer.seek(0)
@@ -536,21 +536,145 @@ def main():
         larva_born_img = f"data:image/png;base64,{plot_data}"
 
         # Unspent Metrics
+        my_metrics = unspent_df.groupby('second')['unspent_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = unspent_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = unspent_pro_zerg[:-50]
+        else:
+            pro_metrics = unspent_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(pro_metrics) / sum(my_metrics)
+        plt.legend(['my unspent resources', 'pro unspent resources'])
+        plt.title(f"Cumulative Unspent Resources Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        unspent_img = f"data:image/png;base64,{plot_data}"
 
         # Larva Metrics
+        my_metrics = larva_df.groupby('second')['larva_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = larva_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = larva_pro_zerg[:-50]
+        else:
+            pro_metrics = larva_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(pro_metrics) / sum(my_metrics)
+        plt.legend(['my unspent larva', 'pro unspent larva'])
+        plt.title(f"Cumulative Unspent Larva Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        larva_img = f"data:image/png;base64,{plot_data}"
 
         # Creep Metrics
+        my_metrics = creep_df.groupby('second')['creep_count'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = creep_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = creep_pro_zerg[:-50]
+        else:
+            pro_metrics = creep_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my creep', 'pro creep'])
+        plt.title(f"Creep Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        creep_img = f"data:image/png;base64,{plot_data}"
 
         # Supply Metrics
+        my_metrics = supply_df.groupby('second')['supply_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = supply_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = supply_pro_zerg[:-50]
+        else:
+            pro_metrics = supply_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my supply', 'pro supply'])
+        plt.title(f"Supply Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        supply_img = f"data:image/png;base64,{plot_data}"
 
         # Economy Metrics
+        my_metrics = economy_df.groupby('second')['economy_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = economy_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = economy_pro_zerg[:-50]
+        else:
+            pro_metrics = economy_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my economy', 'pro economy'])
+        plt.title(f"Economy Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        economy_img = f"data:image/png;base64,{plot_data}"
 
         # Army Metrics
+        my_metrics = army_df.groupby('second')['army_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = army_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = army_pro_zerg[:-50]
+        else:
+            pro_metrics = army_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my army', 'pro army'])
+        plt.title(f"Army Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        army_img = f"data:image/png;base64,{plot_data}"
 
         # Tech Metrics
-            
-        
-        # <img src="{img_src}" alt="">
+        my_metrics = tech_df.groupby('second')['tech_amount'].quantile(0.50)[:-50]
+        if player2_race == 'Terran':
+            pro_metrics = tech_pro_terran[:-50]
+        elif player2_race == 'Zerg':
+            pro_metrics = tech_pro_zerg[:-50]
+        else:
+            pro_metrics = tech_pro_protoss[:-50]        
+        plt.plot(my_metrics)
+        plt.plot(pro_metrics)
+        score = sum(my_metrics) / sum(pro_metrics)
+        plt.legend(['my tech', 'pro tech'])
+        plt.title(f"Tech Benchmark - Score {score:.0%}")
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format='png', bbox_inches='tight')
+        buffer.seek(0)
+        plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        tech_img = f"data:image/png;base64,{plot_data}"            
+
         return render_template("result.html", 
                                 larva_born_img=larva_born_img,
                                 unspent_img=unspent_img,
@@ -561,6 +685,3 @@ def main():
                                 army_img=army_img,
                                 tech_img=tech_img
                                )
-
-    if request.method == "GET":
-        return render_template("upload.html")
