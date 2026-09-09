@@ -17,6 +17,6 @@ python -m PyInstaller --noconfirm --onedir --windowed main.py
 
 python -m PyInstaller --noconfirm --onedir --windowed --add-data "../data;data" --name="MyBenchmarkApp" main.py
 
-python -m PyInstaller --noconfirm --onedir --add-data "../data;data;src/output_html.html;src" --name="MyBenchmarkApp" main.py
+python -m PyInstaller --noconfirm --onedir --add-data "../data;data" --add-data "output_html.html;src" --name="MyBenchmarkApp" main.py
 
 C:\Users\peter\OneDrive\code\benchmark\data\input\my_data\sample_2

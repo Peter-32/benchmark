@@ -89,7 +89,7 @@ def main():
                 player2 = player.name
                 player2_race = player.play_race
 
-        # Larva Metrics
+        # Larva Born Metrics
         larva_born_times_data = []
         for event in replay.events:
             seconds = event.frame / 22.4
@@ -107,7 +107,6 @@ def main():
                 larva_born_times_data.append(seconds)
             if seconds > 10*60:
                 break
-
         larva_born_times_df = pd.DataFrame()
         larva_born_times_df['larva_born_time'] = larva_born_times_data
         larva_born_times_df['game_number'] = game_number
@@ -116,10 +115,72 @@ def main():
         larva_born_times_df['main_player_won'] = player1_won
         larva_born_times_df = larva_born_times_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_born_time', 'main_player_won']]
 
-        local.write.csv(larva_born_times_df, '3_extract_my_larva_borns')
+        # Unspent Metrics
+        unspent_amounts_data = []
+        unspent_data = []
+        for event in replay.events:
+            seconds = event.frame / 22.4
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+            if event.name == 'PlayerStatsEvent':
+                unspent_data.append(seconds)
+                unspent_amounts_data.append(event.minerals_current + event.vespene_current)
+            if seconds > 10*60:
+                break
+        output_df = pd.DataFrame()
+        output_df['unspent_time'] = unspent_data
+        output_df['unspent_amount'] = unspent_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'unspent_time', 'unspent_amount']]
 
-
-
+        # Larva Metrics
+        larva_amounts_data = []
+        larva_data = []
+        current_larva_count = 0
+        for event in replay.tracker_events:
+            seconds = event.frame / 22.4
+            minutes = int(seconds // 60)
+            remaining_seconds = int(seconds % 60)
+            if seconds < 1:
+                continue
+        
+            try: 
+                if player2 in str(event):
+                    continue           
+                if event.player == player2:
+                    continue
+            except:
+                pass
+            
+        
+            if "changed to Egg" in str(event):
+                current_larva_count = max(0, current_larva_count - 1)
+            if "Unit born Larva" in str(event):
+                current_larva_count += 1            
+                larva_data.append(seconds)
+                larva_amounts_data.append(current_larva_count)
+            if seconds > 60*10:
+                break
+        output_df = pd.DataFrame()
+        output_df['larva_time'] = larva_data
+        output_df['larva_amount'] = larva_amounts_data
+        output_df['game_number'] = game_number
+        output_df['opponent_race'] = player2_race
+        output_df['game_length_seconds_max_600'] = int(np.round(seconds,0))
+        output_df['main_player_won'] = player1_won
+        output_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'larva_time', 'larva_amount']]
 
 
 
