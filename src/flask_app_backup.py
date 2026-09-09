@@ -426,12 +426,88 @@ def main():
         creep_df = my_data_cumulative_df.copy()
 
         # Supply Metrics
+        input_data1 = list(supply_df.sort_values(by='supply_time')['supply_time'].values)
+        input_data2 = list(supply_df.sort_values(by='supply_time')['supply_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative += input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['supply_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = supply_df.iloc[0]['opponent_race']
+        supply_df = my_data_cumulative_df.copy()
 
         # Economy Metrics
+        input_data1 = list(economy_df.sort_values(by='economy_time')['economy_time'].values)
+        input_data2 = list(economy_df.sort_values(by='economy_time')['economy_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative = input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['economy_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = economy_df.iloc[0]['opponent_race']
+        economy_df = my_data_cumulative_df.copy()
 
         # Army Metrics
+        input_data1 = list(army_df.sort_values(by='army_time')['army_time'].values)
+        input_data2 = list(army_df.sort_values(by='army_time')['army_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative = input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['army_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = army_df.iloc[0]['opponent_race']
+        army_df = my_data_cumulative_df.copy()
 
         # Tech Metrics
+        input_data1 = list(tech_df.sort_values(by='tech_time')['tech_time'].values)
+        input_data2 = list(tech_df.sort_values(by='tech_time')['tech_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative = input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['tech_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = tech_df.iloc[0]['opponent_race']
+        tech_df = my_data_cumulative_df.copy()
 
         imgs=[]
         return render_template("result.html", imgs=imgs)
