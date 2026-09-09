@@ -7,9 +7,9 @@ import numpy as np
 import tqdm
 from glob import glob
 from utils import *
-
-
-
+import matplotlib.pyplot as plt
+import base64
+import io
 
 
 
@@ -519,14 +519,30 @@ def main():
             pro_metrics = larva_born_pro_terran[:-50]
             plt.plot(my_metrics)
             plt.plot(pro_metrics)
-            score = sum(my_terran_aggregated_data) / sum(pro_terran_aggregated_data)
+            score = sum(my_metrics) / sum(pro_metrics)
             plt.legend(['my larva_borns', 'pro larva_borns'])
             plt.title(f"larva_born ZvT Benchmark - Score {score:.0%}")
-            plt.savefig(f"png_my_larva_born_zvt_benchmark.png")
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png', bbox_inches='tight')
+            buffer.seek(0)
             plt.clf()
 
-        imgs=[]
-        return render_template("result.html", imgs=imgs)
+            # Encode buffer bytes to a base64 string
+            plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+            larva_born_img = f"data:image/png;base64,{plot_data}"
+            
+        
+        # <img src="{img_src}" alt="">
+        return render_template("result.html", 
+                                larva_born_img=larva_born_img,
+                                unspent_img=unspent_img,
+                                larva_img=larva_img,
+                                creep_img=creep_img,
+                                supply_img=supply_img,
+                                economy_img=economy_img,
+                                army_img=army_img,
+                                tech_img=tech_img
+                               )
 
     if request.method == "GET":
         return render_template("upload.html")
