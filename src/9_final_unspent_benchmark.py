@@ -12,7 +12,7 @@ my_terran_aggregated_data
 pro_df = local.read.csv("8_pro_unspent_transform", 'interim')
 pro_terran_df = pro_df.query('opponent_race == "Terran"')
 pro_terran_aggregated_data = pro_terran_df.groupby('second')['unspent_amount'].quantile(0.20)[:-50]
-pro_terran_aggregated_data
+print(",".join(list([str(x) for x in pro_terran_aggregated_data.values])))
 
 plt.plot(my_terran_aggregated_data)
 plt.plot(pro_terran_aggregated_data)
@@ -28,7 +28,7 @@ my_zerg_aggregated_data
 
 pro_zerg_df = pro_df.query('opponent_race == "Zerg"')
 pro_zerg_aggregated_data = pro_zerg_df.groupby('second')['unspent_amount'].quantile(0.20)[:-50]
-pro_zerg_aggregated_data
+print(",".join(list([str(x) for x in pro_zerg_aggregated_data.values])))
 
 plt.plot(my_zerg_aggregated_data)
 plt.plot(pro_zerg_aggregated_data)
@@ -44,7 +44,7 @@ my_protoss_aggregated_data
 
 pro_protoss_df = pro_df.query('opponent_race == "Protoss"')
 pro_protoss_aggregated_data = pro_protoss_df.groupby('second')['unspent_amount'].quantile(0.20)[:-50]
-pro_protoss_aggregated_data
+print(",".join(list([str(x) for x in pro_protoss_aggregated_data.values])))
 
 plt.plot(my_protoss_aggregated_data)
 plt.plot(pro_protoss_aggregated_data)
