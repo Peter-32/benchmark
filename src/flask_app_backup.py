@@ -364,8 +364,8 @@ def main():
         larva_born_times_df = my_data_cumulative_df.copy()
 
         # Unspent Metrics
-        input_data1 = list(larva_born_times_df.sort_values(by='unspent_time')['unspent_time'].values)
-        input_data2 = list(larva_born_times_df.sort_values(by='unspent_time')['unspent_amount'].values)
+        input_data1 = list(unspent_df.sort_values(by='unspent_time')['unspent_time'].values)
+        input_data2 = list(unspent_df.sort_values(by='unspent_time')['unspent_amount'].values)
         data_i = []
         cumulative_total = []
         j = 0
@@ -382,9 +382,38 @@ def main():
         my_data_cumulative_df['game_number'] = game_number
         my_data_cumulative_df['unspent_amount'] = cumulative_total
         my_data_cumulative_df['opponent_race'] = larva_born_times_df.iloc[0]['opponent_race']
-        larva_born_times_df = my_data_cumulative_df.copy()
+        unspent_df = my_data_cumulative_df.copy()
 
+        # Larva Metrics
+        input_data1 = list(larva_df.sort_values(by='larva_time')['larva_time'].values)
+        input_data2 = list(larva_df.sort_values(by='larva_time')['larva_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative += input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['larva_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = larva_df.iloc[0]['opponent_race']
+        larva_df = my_data_cumulative_df.copy()
 
+        # Creep Metrics
+
+        # Supply Metrics
+
+        # Economy Metrics
+
+        # Army Metrics
+
+        # Tech Metrics
 
         imgs=[]
         return render_template("result.html", imgs=imgs)
