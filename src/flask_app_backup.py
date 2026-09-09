@@ -515,6 +515,7 @@ def main():
         # Making the Plots
         #####################
 
+        # Larva Born Metrics
         my_metrics = larva_born_df.groupby('second')['larva_born_count'].quantile(0.50)[:-50]
         if player2_race == 'Terran':
             pro_metrics = larva_born_pro_terran[:-50]
@@ -531,10 +532,22 @@ def main():
         plt.savefig(buffer, format='png', bbox_inches='tight')
         buffer.seek(0)
         plt.clf()
+        plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        larva_born_img = f"data:image/png;base64,{plot_data}"
 
-            # Encode buffer bytes to a base64 string
-            plot_data = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            larva_born_img = f"data:image/png;base64,{plot_data}"
+        # Unspent Metrics
+
+        # Larva Metrics
+
+        # Creep Metrics
+
+        # Supply Metrics
+
+        # Economy Metrics
+
+        # Army Metrics
+
+        # Tech Metrics
             
         
         # <img src="{img_src}" alt="">
