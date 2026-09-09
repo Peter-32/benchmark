@@ -339,6 +339,51 @@ def main():
         output_df['main_player_won'] = player1_won
         tech_df = output_df[['game_number', 'opponent_race', 'game_length_seconds_max_600', 'tech_time', 'tech_amount']].copy()
 
+        ######################
+        # Begin transforming
+        ######################
+
+        # Larva Born Metrics
+        input_data = list(larva_born_times_df.sort_values(by='larva_born_time')['larva_born_time'].values)
+        data_i = []
+        cumulative_count = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data)):
+            while i < input_data[j]:
+                data_i.append(i)
+                cumulative_count.append(current_cumulative)
+                i += 1
+            current_cumulative += 1
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['larva_born_count'] = cumulative_count
+        my_data_cumulative_df['opponent_race'] = larva_born_times_df.iloc[0]['opponent_race']
+        larva_born_times_df = my_data_cumulative_df.copy()
+
+        # Unspent Metrics
+        input_data1 = list(larva_born_times_df.sort_values(by='unspent_time')['unspent_time'].values)
+        input_data2 = list(larva_born_times_df.sort_values(by='unspent_time')['unspent_amount'].values)
+        data_i = []
+        cumulative_total = []
+        j = 0
+        current_cumulative = 0
+        i = 0
+        for j in range(len(input_data1)):
+            while i < input_data1[j]:
+                data_i.append(i)
+                cumulative_total.append(current_cumulative)
+                i += 1
+            current_cumulative += input_data2[j]
+        my_data_cumulative_df = pd.DataFrame()
+        my_data_cumulative_df['second'] = data_i
+        my_data_cumulative_df['game_number'] = game_number
+        my_data_cumulative_df['unspent_amount'] = cumulative_total
+        my_data_cumulative_df['opponent_race'] = larva_born_times_df.iloc[0]['opponent_race']
+        larva_born_times_df = my_data_cumulative_df.copy()
+
 
 
         imgs=[]
