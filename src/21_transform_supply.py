@@ -24,7 +24,7 @@ for game_number in pro_df.game_number.unique():
             data_i.append(i)
             cumulative_total.append(current_cumulative)
             i += 1
-        current_cumulative += input_data2[j]
+        current_cumulative = input_data2[j]
 
     pro_data_cumulative_df = pd.DataFrame()
     pro_data_cumulative_df['second'] = data_i
@@ -52,7 +52,7 @@ for game_number in my_df.game_number.unique():
             data_i.append(i)
             cumulative_total.append(current_cumulative)
             i += 1
-        current_cumulative += input_data2[j]
+        current_cumulative = input_data2[j]
 
     my_data_cumulative_df = pd.DataFrame()
     my_data_cumulative_df['second'] = data_i

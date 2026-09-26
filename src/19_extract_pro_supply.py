@@ -56,7 +56,7 @@ for file in tqdm.tqdm(files):
     
         if event.name == 'PlayerStatsEvent':
             supply_data.append(seconds)
-            supply_amounts_data.append(event.food_made - event.food_used)
+            supply_amounts_data.append(event.food_made)
         if seconds > 10*60:
             break
     output_df = pd.DataFrame()

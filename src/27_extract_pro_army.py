@@ -52,11 +52,16 @@ for file in tqdm.tqdm(files):
                 continue
         except:
             pass
-        
+
+        if event.name in ('UnitBornEvent', 'UnitInitEvent'):
+            unit = event.unit
+            if getattr(unit, 'is_army', False):
+                army_data.append(seconds)
+                army_amounts_data.append(unit.minerals + unit.vespene)
     
-        if event.name == 'PlayerStatsEvent':
-            army_data.append(seconds)
-            army_amounts_data.append(event.minerals_used_current_army + event.minerals_used_in_progress_army + event.vespene_used_current_army + event.vespene_used_in_progress_army)
+        # if event.name == 'PlayerStatsEvent':
+        #     army_data.append(seconds)
+        #     army_amounts_data.append(event.minerals_used_current_army + event.minerals_used_in_progress_army + event.vespene_used_current_army + event.vespene_used_in_progress_army)
         if seconds > 10*60:
             break
     output_df = pd.DataFrame()

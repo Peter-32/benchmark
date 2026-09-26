@@ -7,7 +7,7 @@ from utils import *
 
 all_dfs = []
 game_number = 0
-for account in ['sample']:
+for account in ['sample/account1', 'sample/account2', 'sample/account3', 'sample/account4']:
     base_project_folder = get_base_project_folder()
     files = glob(f'{base_project_folder}/data/input/my_data/{account}/*')
     for file in tqdm.tqdm(files):
@@ -20,10 +20,12 @@ for account in ['sample']:
         if replay.map_name in ['Ruby Rock LE', 'Emerald City CE', 'Reclamation LE', 'Fields of Death', 'Gemgarden LE', 'New Bed of Chaos LE', 'Rhoskallian LE', 'Rust Bucket LE', 'Sludge City', 'Undercurrent LE', 'Yellowjacket', 'Phantom Mode']:
             continue
         game_number += 1
-        assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
+        if replay.map_name not in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE']:
+            continue
 
         is_valid_release = replay.release_string >= '5.0.16'
-        assert is_valid_release, replay.release_string
+        if not is_valid_release:
+            continue
         
         player1 = 'nemo'
         player2 = None
@@ -57,11 +59,15 @@ for account in ['sample']:
                     continue
             except:
                 pass
-            
-        
-            if event.name == 'PlayerStatsEvent':
-                army_data.append(seconds)
-                army_amounts_data.append(event.minerals_used_current_army + event.minerals_used_in_progress_army + event.vespene_used_current_army + event.vespene_used_in_progress_army)
+            if event.name in ('UnitBornEvent', 'UnitInitEvent'):
+                unit = event.unit
+                if getattr(unit, 'is_army', False):
+                    army_data.append(seconds)
+                    army_amounts_data.append(unit.minerals + unit.vespene)
+    
+            # if event.name == 'PlayerStatsEvent':
+            #     army_data.append(seconds)
+            #     army_amounts_data.append(event.minerals_used_current_army + event.minerals_used_in_progress_army + event.vespene_used_current_army + event.vespene_used_in_progress_army)
             if seconds > 10*60:
                 break
         output_df = pd.DataFrame()

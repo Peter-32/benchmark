@@ -26,14 +26,15 @@ def save_params(val1, val2):
         print(f"Failed to save preferences: {e}")
 
 def my_main_function(replay_path, player_name):
-    all_files = glob("*.py")
-    files_of_interest = [y for (x, y) in sorted([(str(x.split("_")[0]).zfill(2), x) for x in all_files]) if 'get_data' not in y and 'pro' not in y and y not in ['main.py', 'utils.py']]
-    result = subprocess.run([sys.executable, '1_get_data.py', replay_path, player_name], check=True, capture_output=True, text=True)
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
+    all_files = glob("*.py") # and 'pro' not in y
+    files_of_interest = [y for (x, y) in sorted([(str(x.split("_")[0]).zfill(2), x) for x in all_files]) if 'get_data' not in y and y not in ['main.py', 'utils.py', 'flask_app_backup.py']]
+    print(files_of_interest)
+    # result = subprocess.run([sys.executable, '1_get_data.py', replay_path, player_name], check=True, capture_output=True, text=True)
+    # print("STDOUT:", result.stdout)
+    # print("STDERR:", result.stderr)
     for script_name in tqdm.tqdm(files_of_interest):
         print(script_name)
-        subprocess.run([sys.executable, script_name], check=True)
+        result = subprocess.run([sys.executable, script_name], check=True)
         print("STDOUT:", result.stdout)
         print("STDERR:", result.stderr)
     html_file = Path(__file__).parent / "output_html.html"
