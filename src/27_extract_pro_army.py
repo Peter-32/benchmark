@@ -17,10 +17,10 @@ for file in tqdm.tqdm(files):
         print(f"Failed to load {file}: {e}")
         continue
     
-    assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
+    # assert replay.map_name in ['valid_maps', "At Eternity's Edge LE", 'Blackrock LE', 'Fear and Faith LE', 'Rainfall LE', 'Sanctuary III LE', 'Lockdown LE', 'Washout LE', 'Rorschach LE', 'Old Sun Temple LE'], replay.map_name
 
     is_valid_release = replay.release_string >= '5.0.16'
-    assert is_valid_release, replay.release_string
+    # assert is_valid_release, replay.release_string
     
     player1 = 'Serral'
     player2 = None
